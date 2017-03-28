@@ -21,6 +21,8 @@ def command_event_listener():
         command = raw_input("")
         if command == "n":
             next_track()
+        if command == "p":
+            previous_track()
         if command == "q":
             print ""
             os.system("clear")
@@ -38,6 +40,8 @@ def print_interface():
 
 def next_track():
     os.system("osascript next.applescript")
+def previous_track():
+    os.system("osascript previous.applescript")
 
 
 # Initialise threading
