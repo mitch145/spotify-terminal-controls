@@ -1,6 +1,6 @@
 # Spotify Terminal Controls
 
-A simple spotify control app for macOS terminal.
+A simple spotify control script for macOS terminal.
 
 ## Commands:
 
