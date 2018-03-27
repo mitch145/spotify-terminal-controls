@@ -1,6 +1,7 @@
 require('dotenv').config()
 var exec = require('child_process').exec;
 var readline = require('readline');
+var chalk = require('chalk');
 
 function execute(command, callback) {
   exec(command, function (error, stdout, stderr) { callback(stdout); });
@@ -12,7 +13,7 @@ function msToMinutesAndSeconds(ms) {
   return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
 }
 
-class SpotifyAppleScriptAPI {
+class Spotify {
   async getState(){
     return new Promise((resolve, reject) => {
       exec('osascript get_state.applescript', function (error, stdout, stderr) { resolve(JSON.parse(stdout.replace(/\n$/, ''))); });
@@ -24,32 +25,25 @@ class SpotifyAppleScriptAPI {
     })
   }
   async print() {
-    const progressLength = 20;
+    const progressLength = 50;
 
     let track = await spotify.getTrack();
     let state = await spotify.getState();
-    let progress = Math.floor((state.position / (track.duration / 1000)) * progressLength);
+    let progress = Math.floor((state.position / (track.duration / 1000)) * progressLength) + 1;
 
     process.stdout.clearLine();
     process.stdout.cursorTo(0);
-    process.stdout.write(`${track.artist} - ${track.name} [${'='.repeat(progress)}${' '.repeat(progressLength - progress)}]`);
+    process.stdout.write(`${track.artist} - ${track.name} ${'\u25A0'.repeat(progress - 1)}${chalk.green('\u25A0')}${'\u25A0'.repeat(progressLength - progress)}`);
+    // process.stdout.write(`${track.artist} - ${track.name} ${progress}`);
   }
 }
 
-const spotify = new SpotifyAppleScriptAPI();
-// let fn = async () => {
-
-//   let output = await spotify.getState();
-//   let output2 = await spotify.getTrack();
-//   console.log(output)
-//   console.log(output2)
-// };
-// fn();
+const spotify = new Spotify();
 
 
 setInterval(() => {
   spotify.print();
-}, 100);
+}, 200);
 
 process.on('SIGINT', () => {
   process.stdout.clearLine();
