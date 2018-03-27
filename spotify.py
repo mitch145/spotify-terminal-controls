@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import subprocess, os, sys, time, threading
 
@@ -9,8 +9,8 @@ def print_track():
     old_artist = ""
     old_track = ""
     while True:
-        artist = subprocess.check_output("osascript artist.applescript", shell=True).strip()
-        track = subprocess.check_output("osascript track.applescript", shell=True).strip()
+        artist = str(subprocess.check_output("osascript artist.applescript", shell=True, universal_newlines=True).strip())
+        track = str(subprocess.check_output("osascript track.applescript", shell=True, universal_newlines=True).strip())
         if artist != old_artist or track != old_track:
             print_interface()
         old_artist = artist
@@ -18,25 +18,25 @@ def print_track():
 
 def command_event_listener():
     while True:
-        command = raw_input("")
+        command = input("")
         if command == "n":
             next_track()
         if command == "p":
             previous_track()
         if command == "q":
-            print ""
+            print("")
             os.system("clear")
-            print "Goodbye :("
+            print("Goodbye :(")
             os._exit(1)
         print_interface()
 
 def print_interface():
-    artist = subprocess.check_output("osascript artist.applescript", shell=True).strip()
-    track = subprocess.check_output("osascript track.applescript", shell=True).strip()
-    print ""
+    artist = str(subprocess.check_output("osascript artist.applescript", shell=True, universal_newlines=True).strip())
+    track = str(subprocess.check_output("osascript track.applescript", shell=True, universal_newlines=True).strip())
+    print("")
     os.system("clear")
-    print artist + " - " + track
-    print "Command: ",
+    print(artist + " - " + track)
+    print("Command: ", end="", flush=True)
 
 def next_track():
     os.system("osascript next.applescript")
