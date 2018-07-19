@@ -34,16 +34,26 @@ class Spotify {
     process.stdout.clearLine();
     process.stdout.cursorTo(0);
     process.stdout.write(`${track.artist} - ${track.name} ${'\u25A0'.repeat(progress - 1)}${chalk.green('\u25A0')}${'\u25A0'.repeat(progressLength - progress)}`);
-    // process.stdout.write(`${track.artist} - ${track.name} ${progress}`);
   }
 }
 
 const spotify = new Spotify();
 
-
 setInterval(() => {
   spotify.print();
 }, 200);
+
+readline.emitKeypressEvents(process.stdin);
+process.stdin.setRawMode(true);
+process.stdin.on('keypress', (str, key) => {
+  if (key.ctrl && key.name === 'c') {
+    process.exit();
+  } else if (key.name === 'n') {
+    exec('osascript next.applescript')
+  } else if (key.name === 'p') {
+    exec('osascript previous.applescript')
+  }
+});
 
 process.on('SIGINT', () => {
   process.stdout.clearLine();
