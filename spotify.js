@@ -3,45 +3,36 @@ var exec = require('child_process').exec;
 var readline = require('readline');
 var chalk = require('chalk');
 
-function execute(command, callback) {
-  exec(command, function (error, stdout, stderr) { callback(stdout); });
+function execute(command) {
+  return new Promise(resolve => {
+    exec(command, function (error, stdout, stderr) { resolve(stdout); });
+  });
 };
 
-function msToMinutesAndSeconds(ms) {
-  var minutes = Math.floor(ms / 60000);
-  var seconds = ((ms % 60000) / 1000).toFixed(0);
-  return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+async function getState() {
+  return JSON.parse(await execute('osascript get_state.applescript'));
 }
 
-class Spotify {
-  async getState(){
-    return new Promise((resolve, reject) => {
-      exec('osascript get_state.applescript', function (error, stdout, stderr) { resolve(JSON.parse(stdout.replace(/\n$/, ''))); });
-    })
-  }
-  async getTrack(){
-    return new Promise((resolve, reject) => {
-      exec('osascript get_track.applescript', function (error, stdout, stderr) { resolve(JSON.parse(stdout.replace(/\n$/, ''))); });
-    })
-  }
-  async print() {
-    const progressLength = 50;
-
-    let track = await spotify.getTrack();
-    let state = await spotify.getState();
-    let progress = Math.floor((state.position / (track.duration / 1000)) * progressLength) + 1;
-
-    process.stdout.clearLine();
-    process.stdout.cursorTo(0);
-    process.stdout.write(`${track.artist} - ${track.name} ${'\u25A0'.repeat(progress - 1)}${chalk.green('\u25A0')}${'\u25A0'.repeat(progressLength - progress)}`);
-  }
+async function getTrack() {
+  return JSON.parse(await execute('osascript get_track.applescript'));
 }
 
-const spotify = new Spotify();
+async function print() {
+  const progressLength = 50;
+
+  let track = await getTrack();
+  let state = await getState();
+  let progress = Math.floor((state.position / (track.duration / 1000)) * progressLength) + 1;
+
+  process.stdout.clearLine();
+  process.stdout.cursorTo(0);
+  process.stdout.write(`${track.artist} - ${track.name} ${'\u25A0'.repeat(progress - 1)}${chalk.green('\u25A0')}${'\u25A0'.repeat(progressLength - progress)}`);
+}
 
 setInterval(() => {
-  spotify.print();
+  print();
 }, 200);
+
 
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
