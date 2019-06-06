@@ -1,0 +1,34 @@
+{
+  "name": "spotify-terminal-controls",
+  "version": "1.0.0",
+  "description": "A simple spotify control script for macOS terminal.",
+  "main": "spotify.js",
+  "dependencies": {
+    "ansi-styles": "^3.2.1",
+    "chalk": "^2.4.1",
+    "color-convert": "^1.9.1",
+    "color-name": "^1.1.3",
+    "dotenv": "^5.0.1",
+    "escape-string-regexp": "^1.0.5",
+    "has-flag": "^3.0.0",
+    "supports-color": "^5.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  },
+  "scripts": {
+    "start": "node spotify.js",
+    "dev": "nodemon spotify.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mitch145/spotify-terminal-controls.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mitch145/spotify-terminal-controls/issues"
+  },
+  "homepage": "https://github.com/mitch145/spotify-terminal-controls#readme"
+}
